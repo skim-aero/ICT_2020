@@ -89,9 +89,9 @@
 
  This is the software for the ICT Project 2020 flight tests. Main purposes of this software are detecting obstacles and target using YOLOv3 based on cuDNN and calculating the Geodetic coordinate position of those objects. This software had programmed to be worked properly on PNUAV-R2 and PNUAV-R3(Also any other platform which have same configuration).
 
-**Developed by Samuel Sukkeun Kim**
+**Developed by Sukkeun Kim**
 **Flight Dynamics Lab., Dept. of Aerospace Eng., Pusan National University, Korea**
-* Email: <samkim96@pusan.ac.kr>
+* Email: <s.kim.aero@gmail.com>
 
 ## 2. Software Modules
 
