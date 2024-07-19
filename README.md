@@ -1,6 +1,75 @@
 # Introduction of ICT Vision Software
-***
-## Version Information
+
+## 1. Software Introduction
+
+ This is the software for the ICT Project 2020 flight tests. Main purposes of this software is detecting obstacles and target using YOLOv3 based on cuDNN and calculating the Geodetic coordinate position of those objects. This software had programmed to be worked properly on PNUAV-R2 and PNUAV-R3 (Also any other platform which have same configuration).
+
+Further information of this software can be found from following paper:
+[ICT Paper](https://doi.org/10.1007/s42405-021-00355-1)
+
+**Developed by Sukkeun Kim**
+**Flight Dynamics Lab., Dept. of Aerospace Eng., Pusan National University, Korea**
+* Email: <s.kim.aero@gmail.com>
+
+## 2. Software Modules
+
+ This software has 4 modules to conduct the mission as follow. Detailed function of the modules, see below.
+
+1. SerialComm: Works for the serial communication(RS232) with FCC(Mbed) based on libserial.
+2. VidProc: Works for the video input/output and several processing based on OpenCV.
+3. DetecObj: Works for detecting objects and calculating the Geodetic coordinate position based on OpenCV and YOLOv3.
+4. Gimbal: Works for gimbal control based on JHPWMDriver.
+
+## 3. HW/SW Configuration and Requirements
+### Hardware
+
+* Nvidia Jetson TX2 with ConnectTech Inc. carrier board
+  * ConnectTech Inc. Elroy (ASG002) for PNUAV-R2 (No longer)
+  * ConnectTech Inc. Astro (ASG001) for PNUAV-R4~6
+* Camera and gimbal system
+  * Tarot Peeper HD 10X with TL10A00 gimbal for PNUAV-R3 (No longer)
+  * GoPro 3 with Tarot T4-3D gimbal for PNUAV-R4~6
+* AVerMedia DarkCrystal HD Capture Mini-PCIe C353
+* SunFounder PCA9685 PWM servo driver
+
+### Software
+
+* Nvidia Jetson TX2 (Minimun)
+  * JetPack 4.2.2
+    * Ubuntu Kernel: L4T R32.2.1 (18.04)
+    * GCC/G++: 7.5.0
+    * CUDA: 10.0/cuDNN 7.5.0
+* CMake 3.12.0 (Minimum)
+* OpenCV 4.2.0 (Minimum)
+* C353 Driver 1.5.0600 (for JetPack 4.2.2)
+* Libserial 1.0.0
+* JHPWMDriver
+
+## 4. Gimbal Calibration(Tarot T4-3D)
+
+ Tarot T4-3D gimbal gets the PWM signal from PCA9685 through the signal line and PCA9685 communicate with Jetson TX2 using I2C. For the detail, see below.
+* Bus and Channel: Bus 0, Ox44
+* Frequency: 60Hz
+* PWM Channel Info (PNUAV-R4)
+  * Pan: Channel 0 (300~440: -90 deg. to 90 deg.)
+  * Tilt: Channel 1 (260~390: -90 deg. to 10 deg. and 335 for -30 deg.)
+  * Neutral: 370
+* PWM Channel Info (PNUAV-R5)
+  * Pan: Channel 0 (320~460: -90 deg. to 90 deg.)
+  * Tilt: Channel 1 (280~410: -90 deg. to 10 deg. and 355 for -30 deg.)
+  * Neutral: 390
+* Connection Info: Use righthandside input ports
+
+## 5. To Run the Software
+
+1. Make sure every hardware and software which had required are ready.
+2. Make sure YOLOv3 names, cfg and weights are in the build directory.
+3. Do CMake and make using the command as below in build directory. Use root permission to use the I2C bus.
+	>$ cmake ..  
+	>$ make -j4  
+	>$ sudo ./ICT_2020
+	
+## 6. Version Information
 
 * 2020.06.02 Beta 0.0 Version: First Commit
 * 2020.06.04 Beta 0.1 Version: Updated README.md and Minor Update
@@ -84,74 +153,6 @@
   * Minor arrangements
 
 
-***
-## 1. Software Introduction
-
- This is the software for the ICT Project 2020 flight tests. Main purposes of this software are detecting obstacles and target using YOLOv3 based on cuDNN and calculating the Geodetic coordinate position of those objects. This software had programmed to be worked properly on PNUAV-R2 and PNUAV-R3(Also any other platform which have same configuration).
-
-**Developed by Sukkeun Kim**
-**Flight Dynamics Lab., Dept. of Aerospace Eng., Pusan National University, Korea**
-* Email: <s.kim.aero@gmail.com>
-
-## 2. Software Modules
-
- This software has 4 modules to conduct the mission as follow. Detailed function of the modules, see below.
-
-1. SerialComm: Works for the serial communication(RS232) with FCC(Mbed) based on libserial.
-2. VidProc: Works for the video input/output and several processing based on OpenCV.
-3. DetecObj: Works for detecting objects and calculating the Geodetic coordinate position based on OpenCV and YOLOv3.
-4. Gimbal: Works for gimbal control based on JHPWMDriver.
-
-## 3. HW/SW Configuration and Requirements
-### Hardware
-
-* Nvidia Jetson TX2 with ConnectTech Inc. carrier board
-  * ConnectTech Inc. Elroy (ASG002) for PNUAV-R2 (No longer)
-  * ConnectTech Inc. Astro (ASG001) for PNUAV-R4~6
-* Camera and gimbal system
-  * Tarot Peeper HD 10X with TL10A00 gimbal for PNUAV-R3 (No longer)
-  * GoPro 3 with Tarot T4-3D gimbal for PNUAV-R4~6
-* AVerMedia DarkCrystal HD Capture Mini-PCIe C353
-* SunFounder PCA9685 PWM servo driver
-
-### Software
-
-* Nvidia Jetson TX2 (Minimun)
-  * JetPack 4.2.2
-    * Ubuntu Kernel: L4T R32.2.1 (18.04)
-    * GCC/G++: 7.5.0
-    * CUDA: 10.0/cuDNN 7.5.0
-* CMake 3.12.0 (Minimum)
-* OpenCV 4.2.0 (Minimum)
-* C353 Driver 1.5.0600 (for JetPack 4.2.2)
-* Libserial 1.0.0
-* JHPWMDriver
-
-## 4. Gimbal Calibration(Tarot T4-3D)
-
- Tarot T4-3D gimbal gets the PWM signal from PCA9685 through the signal line and PCA9685 communicate with Jetson TX2 using I2C. For the detail, see below.
-* Bus and Channel: Bus 0, Ox44
-* Frequency: 60Hz
-* PWM Channel Info (PNUAV-R4)
-  * Pan: Channel 0 (300~440: -90 deg. to 90 deg.)
-  * Tilt: Channel 1 (260~390: -90 deg. to 10 deg. and 335 for -30 deg.)
-  * Neutral: 370
-* PWM Channel Info (PNUAV-R5)
-  * Pan: Channel 0 (320~460: -90 deg. to 90 deg.)
-  * Tilt: Channel 1 (280~410: -90 deg. to 10 deg. and 355 for -30 deg.)
-  * Neutral: 390
-* Connection Info: Use righthandside input ports
-
-## 5. To Run the Software
-
-1. Make sure every hardware and software which had required are ready.
-2. Make sure YOLOv3 names, cfg and weights are in the build directory.
-3. Do CMake and make using the command as below in build directory. Use root permission to use the I2C bus.
-	>$ cmake ..  
-	>$ make -j4  
-	>$ sudo ./ICT_2020
-    
-***
 ## Appendix 1: How to build required libraries on Jeston TX2
 
 1. Flash Jetpack to Jetson TX2 
@@ -280,6 +281,3 @@
 ```
 * Edit Makefile as below to use example code
 	> g++ servoExample.cpp ../src/JHPWMPCA9685.cpp -I../src -li2c -o servoExample
-
-
-
